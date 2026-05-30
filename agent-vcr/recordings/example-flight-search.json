@@ -1,0 +1,145 @@
+{
+  "session_id": "1dcea50b",
+  "name": "example-flight-search",
+  "created_at": "2026-05-30T02:44:47.746156+00:00",
+  "steps": [
+    {
+      "index": 0,
+      "type": "start",
+      "timestamp_ms": 0.015899999198154546,
+      "content": "Session: example-flight-search",
+      "input": null,
+      "output": null,
+      "duration_ms": null,
+      "tokens": 0,
+      "cost_usd": null,
+      "metadata": {}
+    },
+    {
+      "index": 1,
+      "type": "think",
+      "timestamp_ms": 0.042300000131945126,
+      "content": "I need to search for flights from SFO to NRT for June 2026",
+      "input": null,
+      "output": null,
+      "duration_ms": null,
+      "tokens": 45,
+      "cost_usd": null,
+      "metadata": {}
+    },
+    {
+      "index": 2,
+      "type": "tool_call",
+      "timestamp_ms": 0.05210000017541461,
+      "content": "search_flights",
+      "input": {
+        "origin": "SFO",
+        "destination": "NRT",
+        "date": "2026-06-15"
+      },
+      "output": {
+        "flights": [
+          {
+            "airline": "ZIPAIR",
+            "price": 420
+          },
+          {
+            "airline": "ANA",
+            "price": 680
+          }
+        ]
+      },
+      "duration_ms": 2300.0,
+      "tokens": 187,
+      "cost_usd": null,
+      "metadata": {
+        "tool": "search_flights"
+      }
+    },
+    {
+      "index": 3,
+      "type": "observe",
+      "timestamp_ms": 0.06849999954283703,
+      "content": "Found 2 flights. ZIPAIR is cheapest at $420.",
+      "input": null,
+      "output": null,
+      "duration_ms": null,
+      "tokens": 32,
+      "cost_usd": null,
+      "metadata": {}
+    },
+    {
+      "index": 4,
+      "type": "error",
+      "timestamp_ms": 0.0748999991628807,
+      "content": "Failed to book — seat unavailable",
+      "input": null,
+      "output": null,
+      "duration_ms": null,
+      "tokens": 0,
+      "cost_usd": null,
+      "metadata": {
+        "error_type": "BookingError"
+      }
+    },
+    {
+      "index": 5,
+      "type": "retry",
+      "timestamp_ms": 0.08259999958681874,
+      "content": "Retrying with alternative date 2026-06-16",
+      "input": null,
+      "output": null,
+      "duration_ms": null,
+      "tokens": 28,
+      "cost_usd": null,
+      "metadata": {}
+    },
+    {
+      "index": 6,
+      "type": "tool_call",
+      "timestamp_ms": 0.08829999933368526,
+      "content": "book_flight",
+      "input": {
+        "airline": "ZIPAIR",
+        "date": "2026-06-16"
+      },
+      "output": {
+        "booking_id": "BK-20260616-ZP-001"
+      },
+      "duration_ms": 1800.0,
+      "tokens": 95,
+      "cost_usd": null,
+      "metadata": {
+        "tool": "book_flight"
+      }
+    },
+    {
+      "index": 7,
+      "type": "think",
+      "timestamp_ms": 0.09449999924981967,
+      "content": "Successfully booked! Booking ID: BK-20260616-ZP-001",
+      "input": null,
+      "output": null,
+      "duration_ms": null,
+      "tokens": 22,
+      "cost_usd": null,
+      "metadata": {}
+    },
+    {
+      "index": 8,
+      "type": "end",
+      "timestamp_ms": 0.10850000035134144,
+      "content": "Session ended",
+      "input": null,
+      "output": null,
+      "duration_ms": null,
+      "tokens": 0,
+      "cost_usd": null,
+      "metadata": {}
+    }
+  ],
+  "duration_ms": 0.10099999963131268,
+  "total_tokens": 409,
+  "estimated_cost_usd": 0.0,
+  "metadata": {}
+}

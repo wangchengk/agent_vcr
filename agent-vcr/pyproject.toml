@@ -1,0 +1,59 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "agentvcr"
+version = "0.1.0"
+description = "📼 Record, replay, and debug AI Agents — like Chrome DevTools for Agents"
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.10"
+authors = [
+    {name = "AgentVCR Community"}
+]
+keywords = ["ai", "agent", "debug", "replay", "vcr", "recording", "trace", "observability", "llm"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Debuggers",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = [
+    "rich>=13.0",
+    "click>=8.0",
+    "pydantic>=2.0",
+    "orjson>=3.9",
+]
+
+[project.optional-dependencies]
+openai = ["openai>=1.0"]
+langchain = ["langchain>=0.1", "langchain-core>=0.1"]
+anthropic = ["anthropic>=0.25"]
+crewai = ["crewai>=0.1"]
+all = ["openai>=1.0", "anthropic>=0.25"]
+dev = [
+    "pytest>=7.0",
+    "pytest-asyncio>=0.21",
+    "ruff>=0.1",
+    "mypy>=1.0",
+]
+
+[project.scripts]
+agentvcr = "agentvcr.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.mypy]
+python_version = "3.10"
+strict = true

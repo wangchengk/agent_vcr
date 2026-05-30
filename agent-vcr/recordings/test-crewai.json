@@ -1,0 +1,47 @@
+{
+  "session_id": "8f4245d6",
+  "name": "test-crewai",
+  "created_at": "2026-05-30T03:04:23.756684+00:00",
+  "steps": [
+    {
+      "index": 0,
+      "type": "start",
+      "timestamp_ms": 0.006599999323952943,
+      "content": "Session: test-crewai",
+      "input": null,
+      "output": null,
+      "duration_ms": null,
+      "tokens": 0,
+      "cost_usd": null,
+      "metadata": {}
+    },
+    {
+      "index": 1,
+      "type": "think",
+      "timestamp_ms": 0.018700000509852543,
+      "content": "test",
+      "input": null,
+      "output": null,
+      "duration_ms": null,
+      "tokens": 0,
+      "cost_usd": null,
+      "metadata": {}
+    },
+    {
+      "index": 2,
+      "type": "end",
+      "timestamp_ms": 0.02950000089185778,
+      "content": "Session ended",
+      "input": null,
+      "output": null,
+      "duration_ms": null,
+      "tokens": 0,
+      "cost_usd": null,
+      "metadata": {}
+    }
+  ],
+  "duration_ms": 0.025800000003073364,
+  "total_tokens": 0,
+  "estimated_cost_usd": 0.0,
+  "metadata": {}
+}

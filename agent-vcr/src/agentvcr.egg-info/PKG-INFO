@@ -1,0 +1,369 @@
+Metadata-Version: 2.4
+Name: agentvcr
+Version: 0.1.0
+Summary: 📼 Record, replay, and debug AI Agents — like Chrome DevTools for Agents
+Author: AgentVCR Community
+License: MIT
+Keywords: ai,agent,debug,replay,vcr,recording,trace,observability,llm
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Topic :: Software Development :: Debuggers
+Classifier: Topic :: Scientific/Engineering :: Artificial Intelligence
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: rich>=13.0
+Requires-Dist: click>=8.0
+Requires-Dist: pydantic>=2.0
+Requires-Dist: orjson>=3.9
+Provides-Extra: openai
+Requires-Dist: openai>=1.0; extra == "openai"
+Provides-Extra: langchain
+Requires-Dist: langchain>=0.1; extra == "langchain"
+Requires-Dist: langchain-core>=0.1; extra == "langchain"
+Provides-Extra: anthropic
+Requires-Dist: anthropic>=0.25; extra == "anthropic"
+Provides-Extra: crewai
+Requires-Dist: crewai>=0.1; extra == "crewai"
+Provides-Extra: all
+Requires-Dist: openai>=1.0; extra == "all"
+Requires-Dist: anthropic>=0.25; extra == "all"
+Provides-Extra: dev
+Requires-Dist: pytest>=7.0; extra == "dev"
+Requires-Dist: pytest-asyncio>=0.21; extra == "dev"
+Requires-Dist: ruff>=0.1; extra == "dev"
+Requires-Dist: mypy>=1.0; extra == "dev"
+Dynamic: license-file
+
+<div align="center">
+
+# 📼 AgentVCR
+
+### Record. Replay. Debug your AI Agents.
+
+**Like Chrome DevTools, but for AI Agents.**
+
+[![PyPI](https://img.shields.io/pypi/v/agentvcr.svg)](https://pypi.org/project/agentvcr/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
+[![Tests](https://img.shields.io/badge/tests-passing-green.svg)](./tests)
+
+[Quick Start](#-quick-start) · [How It Works](#-how-it-works) · [Integrations](#-integrations) · [Demo](#-demo) · [Contributing](./CONTRIBUTING.md)
+
+</div>
+
+---
+
+> **Tired of asking "what did my Agent do?!"** — AgentVCR records every step, every decision, every tool call. Replay like a video. Debug like a pro.
+
+## 🎬 Demo
+
+```python
+from agentvcr import record
+
+# Just wrap your agent call — that's it
+with record("my-agent-session") as tape:
+    result = my_agent.run("Find me the cheapest flight to Tokyo")
+
+# Replay the entire execution
+tape.play()  # 📼 Playing session...
+             # Step 1/12: think "I need to search for flights..."
+             # Step 2/12: tool_call search_flights(origin="SFO", dest="NRT")
+             # Step 3/12: observe "Found 15 results..."
+             # Step 4/12: think "Let me filter by price..."
+             # ...
+             # ✅ Done. Total: 12 steps, 3 tool calls, 1 error recovered
+```
+
+**Visual replay in your browser:**
+
+```bash
+agentvcr replay session_20260530.json --open
+# Opens an interactive timeline in your browser ↓
+```
+
+```
+┌─ AgentVCR Timeline ──────────────────────────────────────────┐
+│                                                               │
+│  0s    2s    4s    6s    8s    10s   12s   14s               │
+│  │     │     │     │     │     │     │     │                │
+│  🧠    🔧    🧠    🔧    ❌    🔄    🧠    ✅                │
+│  think  call  think  call  error retry think done            │
+│                                                               │
+│  ▶ Step 3/8: tool_call search_flights                         │
+│    Input:  {"origin": "SFO", "dest": "NRT", "date": "2026-06"}│
+│    Output: [{"airline": "ZIPAIR", "price": "$420"}, ...]      │
+│    Latency: 2.3s  Tokens: 187                                 │
+│                                                               │
+└───────────────────────────────────────────────────────────────┘
+```
+
+## 🔥 Why AgentVCR?
+
+| Without AgentVCR | With AgentVCR |
+|-----------------|---------------|
+| "Why did my Agent do THAT?!" | 📼 Replay every decision step |
+| Agent runs = black box | 🔍 Inspect inputs/outputs per step |
+| Debug by re-reading logs | ⏯️ Step through like a debugger |
+| "It worked yesterday..." | 📦 Recordings are reproducible |
+| Can't share failures with team | 🔗 Export & share session replays |
+| No idea what tokens cost per step | 💰 Token & cost tracking built-in |
+
+## 🧠 How It Works
+
+AgentVCR acts as a **transparent middleware** between your code and your Agent:
+
+```
+Your Code  →  AgentVCR (records)  →  Agent Framework  →  LLM / Tools
+                ↓
+           Session Tape (JSON)
+                ↓
+         Replay / Export / Debug
+```
+
+**3 core concepts:**
+
+1. **📼 Tape** — A recorded session. Contains every step, timestamped.
+2. **🧠 Step** — One agent action: think / tool_call / observe / error / custom
+3. **⏯️ Player** — Replays a tape in terminal, browser, or as a test
+
+## ⚡ Quick Start
+
+### Install
+
+```bash
+pip install agentvcr
+```
+
+### Record your first session
+
+```python
+from agentvcr import record
+
+# Method 1: Context manager (recommended)
+with record("debug-flight-search") as tape:
+    result = agent.run("Search flights to Tokyo")
+    # Every LLM call, tool use, and decision is recorded automatically
+
+print(f"Recorded {tape.step_count} steps in {tape.duration:.1f}s")
+
+# Method 2: Decorator (for agent functions)
+from agentvcr import vcr
+
+@vcr.record("my-agent")
+def run_agent(prompt: str):
+    return agent.run(prompt)
+
+run_agent("Book me a hotel")
+```
+
+### Replay a session
+
+```bash
+# Terminal replay (pretty-printed)
+agentvcr replay recordings/debug-flight-search.json
+
+# Open in browser (interactive timeline)
+agentvcr replay recordings/debug-flight-search.json --open
+
+# Replay specific steps only
+agentvcr replay recordings/debug-flight-search.json --steps 3-7
+```
+
+### Export recordings
+
+```bash
+# Export as Markdown report
+agentvcr export recordings/session.json --format markdown
+
+# Export as HTML (shareable!)
+agentvcr export recordings/session.json --format html
+
+# Export test fixtures (replay as unit tests!)
+agentvcr export recordings/session.json --format pytest
+```
+
+## 🔌 Integrations
+
+AgentVCR works with **any** agent framework:
+
+| Framework | How | Status |
+|-----------|-----|--------|
+| **OpenAI Agents SDK** | `from agentvcr.integrations.openai import record_agent` | ✅ Built-in |
+| **LangChain / LangGraph** | `from agentvcr.integrations.langchain import record_chain` | ✅ Built-in |
+| **Anthropic Claude** | `from agentvcr.integrations.anthropic import record_agent` | ✅ Built-in |
+| **CrewAI** | `from agentvcr.integrations.crewai import record_crew` | ✅ Built-in |
+| **AutoGen** | `from agentvcr.integrations.autogen import record_agent` | 🔄 WIP |
+| **Custom / Any** | `from agentvcr import record` | ✅ Works with everything |
+
+### OpenAI Example
+
+```python
+from openai import OpenAI
+from agentvcr.integrations.openai import record_agent
+
+client = OpenAI()
+
+with record_agent("gpt-4o-flight-search") as tape:
+    response = client.chat.completions.create(
+        model="gpt-4o",
+        messages=[{"role": "user", "content": "Find flights to Tokyo"}],
+        tools=[...],  # your tools
+    )
+
+tape.play()  # Replay in terminal
+tape.export("flights_debug.html")  # Share with team
+```
+
+### LangChain Example
+
+```python
+from agentvcr.integrations.langchain import record_chain
+
+with record_chain("my-langchain-agent") as tape:
+    result = agent.invoke({"input": "Analyze this dataset"})
+
+# Step through each chain step
+for step in tape.steps:
+    print(f"{step.type}: {step.summary}")
+```
+
+## 📦 Session Tape Format
+
+Recordings are stored as simple JSON:
+
+```json
+{
+  "session_id": "debug-flight-search",
+  "created_at": "2026-05-30T10:34:00Z",
+  "duration_ms": 14230,
+  "total_tokens": 3847,
+  "estimated_cost_usd": 0.023,
+  "steps": [
+    {
+      "index": 0,
+      "type": "think",
+      "timestamp_ms": 0,
+      "content": "I need to search for flights from SFO to NRT",
+      "tokens": 45,
+      "metadata": {}
+    },
+    {
+      "index": 1,
+      "type": "tool_call",
+      "timestamp_ms": 1200,
+      "content": "search_flights",
+      "input": {"origin": "SFO", "dest": "NRT"},
+      "output": {"flights": [...]},
+      "duration_ms": 2300,
+      "tokens": 187,
+      "metadata": {"tool": "search_flights"}
+    }
+  ]
+}
+```
+
+Simple. Transparent. No vendor lock-in.
+
+## 🛠️ Advanced Usage
+
+### Custom Step Types
+
+```python
+from agentvcr import record, StepType
+
+with record("custom-session") as tape:
+    # Record custom step types
+    tape.add_step(
+        type=StepType.CUSTOM,
+        content="User approved the booking",
+        metadata={"approval_id": "abc123"}
+    )
+```
+
+### Assertions (Test your Agent!)
+
+```python
+from agentvcr import record
+
+with record("flight-agent-test") as tape:
+    result = agent.run("Find cheap flights")
+
+# Assert the agent called the right tool
+tape.assert_step_type("tool_call", index=1)
+tape.assert_step_contains("search_flights", type="tool_call")
+
+# Re-run as a pytest fixture
+tape.to_pytest("test_flight_agent.py")
+```
+
+### CI/CD Integration
+
+```yaml
+# .github/workflows/agent-test.yml
+- name: Run Agent Tests with VCR
+  run: pytest tests/agent/ --vcr-record=once
+  # Records on first run, replays on subsequent runs
+  # No more flaky LLM API tests!
+```
+
+## 🏗️ Architecture
+
+```
+agent-vcr/
+├── src/agentvcr/
+│   ├── __init__.py          # Public API
+│   ├── tape.py              # Tape & Step data models
+│   ├── recorder.py          # Core recording engine
+│   ├── player.py            # Terminal & browser replay
+│   ├── exporters/           # Markdown, HTML, Pytest export
+│   ├── integrations/        # Framework adapters
+│   └── cli.py               # CLI: agentvcr replay/export
+├── examples/                # Ready-to-run examples
+├── tests/                   # Test suite
+├── docs/                    # Documentation
+└── assets/                  # Logo, demo images
+```
+
+## 🗺️ Roadmap
+
+- [x] Core tape recorder & step model
+- [x] Terminal replay with Rich
+- [x] JSON & Markdown export
+- [x] OpenAI / LangChain / Anthropic integrations
+- [ ] Browser-based interactive timeline viewer
+- [ ] Pytest fixture generation ("VCR for Agent tests")
+- [ ] Cost estimation per step
+- [ ] Diff between two recordings (regression debugging)
+- [ ] Real-time recording dashboard (WebSocket)
+- [ ] AgentVCR Cloud (share recordings via URL)
+
+## 🤝 Contributing
+
+Contributions welcome! Especially:
+
+- 📼 New framework integrations
+- 🎨 Better visualizations
+- 🧪 Test fixtures & examples
+- 🌍 Translations & docs
+
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines.
+
+## 📜 License
+
+MIT — record freely, debug openly.
+
+---
+
+<div align="center">
+
+**⭐ If you've ever wondered "what did my Agent just do?!", that's worth a star.**
+
+Made with 📼 by the community · [Discord](https://discord.gg/agentvcr) · [Twitter](https://twitter.com/agentvcr)
+
+</div>

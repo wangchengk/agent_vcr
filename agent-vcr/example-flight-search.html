@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>📼 AgentVCR — example-flight-search</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; background: #fafafa; }
+    h1 { color: #1e1b4b; }
+    .meta { color: #666; font-size: 0.9em; margin-bottom: 20px; }
+    .stats { display: flex; gap: 16px; margin: 20px 0; }
+    .stat { background: white; padding: 12px 20px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    .stat-value { font-size: 1.4em; font-weight: bold; color: #4f46e5; }
+    .stat-label { font-size: 0.8em; color: #888; }
+    pre { background: #1e1b4b; color: #e0e7ff; padding: 12px; border-radius: 6px; overflow-x: auto; font-size: 0.85em; }
+  </style>
+</head>
+<body>
+  <h1>📼 example-flight-search</h1>
+  <div class="meta">Session: 1dcea50b · Created: 2026-05-30T02:44:47.746156+00:00</div>
+  <div class="stats">
+    <div class="stat"><div class="stat-value">9</div><div class="stat-label">Steps</div></div>
+    <div class="stat"><div class="stat-value">2</div><div class="stat-label">Tool Calls</div></div>
+    <div class="stat"><div class="stat-value">1</div><div class="stat-label">Errors</div></div>
+    <div class="stat"><div class="stat-value">0.0s</div><div class="stat-label">Duration</div></div>
+    <div class="stat"><div class="stat-value">409</div><div class="stat-label">Tokens</div></div>
+  </div>
+  
+        <div class="step" style="background:#f9fafb;padding:12px;margin:8px 0;border-radius:8px;border-left:4px solid #6366f1">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <span>▶️ <strong>start</strong> · Step 1</span>
+            <span style="color:#888;font-size:0.85em">0.0s</span>
+          </div>
+          <p style="margin:8px 0 0">Session: example-flight-search</p>
+          
+        </div>
+        <div class="step" style="background:#f0fdf4;padding:12px;margin:8px 0;border-radius:8px;border-left:4px solid #6366f1">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <span>🧠 <strong>think</strong> · Step 2</span>
+            <span style="color:#888;font-size:0.85em">0.0s</span>
+          </div>
+          <p style="margin:8px 0 0">I need to search for flights from SFO to NRT for June 2026</p>
+          
+        </div>
+        <div class="step" style="background:#e0f2fe;padding:12px;margin:8px 0;border-radius:8px;border-left:4px solid #6366f1">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <span>🔧 <strong>tool_call</strong> · Step 3</span>
+            <span style="color:#888;font-size:0.85em">0.0s</span>
+          </div>
+          <p style="margin:8px 0 0">search_flights</p>
+          <details><summary>Details</summary><pre>{'origin': 'SFO', 'destination': 'NRT', 'date': '2026-06-15'}\n{'flights': [{'airline': 'ZIPAIR', 'price': 420}, {'airline': 'ANA', 'price': 680}]}</pre></details>
+        </div>
+        <div class="step" style="background:#f9fafb;padding:12px;margin:8px 0;border-radius:8px;border-left:4px solid #6366f1">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <span>👁️ <strong>observe</strong> · Step 4</span>
+            <span style="color:#888;font-size:0.85em">0.0s</span>
+          </div>
+          <p style="margin:8px 0 0">Found 2 flights. ZIPAIR is cheapest at $420.</p>
+          
+        </div>
+        <div class="step" style="background:#fee2e2;padding:12px;margin:8px 0;border-radius:8px;border-left:4px solid #6366f1">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <span>❌ <strong>error</strong> · Step 5</span>
+            <span style="color:#888;font-size:0.85em">0.0s</span>
+          </div>
+          <p style="margin:8px 0 0">Failed to book — seat unavailable</p>
+          
+        </div>
+        <div class="step" style="background:#f9fafb;padding:12px;margin:8px 0;border-radius:8px;border-left:4px solid #6366f1">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <span>🔄 <strong>retry</strong> · Step 6</span>
+            <span style="color:#888;font-size:0.85em">0.0s</span>
+          </div>
+          <p style="margin:8px 0 0">Retrying with alternative date 2026-06-16</p>
+          
+        </div>
+        <div class="step" style="background:#e0f2fe;padding:12px;margin:8px 0;border-radius:8px;border-left:4px solid #6366f1">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <span>🔧 <strong>tool_call</strong> · Step 7</span>
+            <span style="color:#888;font-size:0.85em">0.0s</span>
+          </div>
+          <p style="margin:8px 0 0">book_flight</p>
+          <details><summary>Details</summary><pre>{'airline': 'ZIPAIR', 'date': '2026-06-16'}\n{'booking_id': 'BK-20260616-ZP-001'}</pre></details>
+        </div>
+        <div class="step" style="background:#f0fdf4;padding:12px;margin:8px 0;border-radius:8px;border-left:4px solid #6366f1">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <span>🧠 <strong>think</strong> · Step 8</span>
+            <span style="color:#888;font-size:0.85em">0.0s</span>
+          </div>
+          <p style="margin:8px 0 0">Successfully booked! Booking ID: BK-20260616-ZP-001</p>
+          
+        </div>
+        <div class="step" style="background:#f9fafb;padding:12px;margin:8px 0;border-radius:8px;border-left:4px solid #6366f1">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <span>⏹️ <strong>end</strong> · Step 9</span>
+            <span style="color:#888;font-size:0.85em">0.0s</span>
+          </div>
+          <p style="margin:8px 0 0">Session ended</p>
+          
+        </div>
+  <footer style="margin-top:40px;text-align:center;color:#aaa;font-size:0.8em">
+    Generated by 📼 AgentVCR v0.1.0
+  </footer>
+</body>
+</html>

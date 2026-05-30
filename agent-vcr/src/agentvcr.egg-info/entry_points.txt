@@ -1,0 +1,2 @@
+[console_scripts]
+agentvcr = agentvcr.cli:main
